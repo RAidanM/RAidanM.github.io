@@ -1,9 +1,9 @@
-import GameComponent from "./GameComponent";
+import GameComponent from "./GameComponent.js";
 export default class Food extends GameComponent{
     power = 1;
     
-    constructor(){
-        super(0,0,0);
+    constructor(x,y){
+        super(x,y,0);
     }
 
     get power(){

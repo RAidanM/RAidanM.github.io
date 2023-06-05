@@ -21,4 +21,8 @@ export default class GameComponent {
         return this.value;
     }
 
+    set value(value){
+        this.value=value;
+    }
+
 }

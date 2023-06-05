@@ -18,6 +18,14 @@ export default class PlayArea {
         this.board = row;
     }
 
+    get width(){
+        return this.width;
+    }
+
+    get height(){
+        return this.height;
+    }
+
     clear(){
         for (let i = 0; i<this.width; i++){
             for (let j = 0; j<this.height; j++){

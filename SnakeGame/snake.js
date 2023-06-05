@@ -23,7 +23,9 @@ import PlayArea from './Modules/PlayArea.js';
 import SnakeHead from './Modules/SnakeHead.js';
 import GameComponent from './Modules/GameComponent.js';
 import SnakeBody from './Modules/SnakeBody.js';
+import Food from './Modules/Food.js';
 
+var playArea = new PlayArea(50,50);
 
 var snakeLength = 10;
 var snakeDirection = [1,0];
@@ -36,10 +38,13 @@ gameComponents.push(
     new SnakeBody(head.x, head.y, head.value+1)
 );
 
-var foodAmount;
+var foodAmount = 2;
 var foodInPlay;
-
-var playArea = new PlayArea(50,50);
+gameComponents.push(
+    new Food(
+        Math.floor((Math.random() * playArea.width)), 
+        Math.random() * playArea.height)
+);
 
 window.addEventListener('keydown', (event) => {
     var eventCode = event.code;
@@ -65,6 +70,7 @@ setInterval(gameTick, 100);
 
 function gameTick(){
 
+    //Moving snake body
     gameComponents.push(
         new SnakeBody(head.x, head.y, head.value+1)
     );
@@ -80,10 +86,15 @@ function gameTick(){
             }
 
         }
-        else if(component){
+    });
 
+    //Collision
+    gameComponents.forEach(component => {
+        if(!(component instanceof SnakeHead)&&(component.x===head.x && component.y===head.y)){
+            component.value = 3;
         }
     });
+
 
     //wrender
     playArea.clear();
@@ -99,9 +110,8 @@ function render(text){
     
     text = String(text).replaceAll("-1", "⬜");
     text = String(text).replaceAll("1", "🟠");
-    for(let i = 1; i<snakeLength+1; i++){
-        text = String(text).replaceAll(""+i, "🟧");
-    }
+    text = String(text).replaceAll("2", "🟧");
+    text = String(text).replaceAll("3", "❌");
     return text;
 }
 
