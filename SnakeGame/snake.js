@@ -26,9 +26,10 @@ import GameComponent from './Modules/GameComponent.js';
 import SnakeBody from './Modules/SnakeBody.js';
 import Food from './Modules/Food.js';
 
-var playArea = new PlayArea(10,10);
+var playArea = new PlayArea(25,25);
 
-var snakeLength = 3;
+var snakeLength = 10;
+var snakePoint = [1,0];
 var snakeDirection = [1,0];
 
 var head = new SnakeHead(3,3);
@@ -39,7 +40,7 @@ gameComponents.push(
     new SnakeBody(head.x, head.y, head.value+1)
 );
 
-var foodAmount = 3;
+var foodAmount = 1;
 var foodInPlay = 0;
 
 window.addEventListener('keydown', (event) => {
@@ -48,16 +49,16 @@ window.addEventListener('keydown', (event) => {
     //alert(`Key pressed ${name} \r\n Key code value: ${eventCode}`);
 
     if (eventCode === ("KeyW") && !(snakeDirection[0] === 0 && !(snakeDirection[0] === -1))){
-        snakeDirection = [0,1];
+        snakePoint = [0,1];
     }
     else if (eventCode === ("KeyD") && !(snakeDirection[0] === -1 && !(snakeDirection[0] === 0))){
-        snakeDirection = [1,0];
+        snakePoint = [1,0];
     }
     else if (eventCode === ("KeyS") && !(snakeDirection[0] === 0 && !(snakeDirection[0] === 1))){
-        snakeDirection = [0,-1];
+        snakePoint = [0,-1];
     }
     else if (eventCode === ("KeyA") && !(snakeDirection[0] === 1 && !(snakeDirection[0] === 0))){
-        snakeDirection = [-1,0];
+        snakePoint = [-1,0];
     }
     
 }, false);
@@ -75,6 +76,8 @@ function gameTick(){
     gameComponents.push(
         new SnakeBody(head.x, head.y, head.value+1)
     );
+
+    snakeDirection=snakePoint;
     head.move(snakeDirection[0],snakeDirection[1])
 
     gameComponents.forEach(component => {
@@ -142,11 +145,12 @@ function lose(){
 }
 
 function nextFood(){
-    if(foodInPlay<foodAmount)
-    gameComponents.push(
-        new Food(
-            Math.floor((Math.random() * playArea.width)), 
-            Math.floor((Math.random() * playArea.height))
-    ));
-    foodInPlay++;
+    if(foodInPlay<foodAmount){
+        gameComponents.push(
+            new Food(
+                Math.floor((Math.random() * playArea.width)), 
+                Math.floor((Math.random() * playArea.height))
+        ));
+        foodInPlay++;
+    }
 }
