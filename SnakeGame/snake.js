@@ -124,7 +124,7 @@ function gameTick(){
         playArea.update(component.x, component.y, component.value);
     });
     document.getElementById("board").innerHTML = render(playArea);
-
+    document.getElementById("score").innerHTML = snakeLength;
 }
 
 function render(text){
