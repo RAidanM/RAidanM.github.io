@@ -26,11 +26,14 @@ import GameComponent from './Modules/GameComponent.js';
 import SnakeBody from './Modules/SnakeBody.js';
 import Food from './Modules/Food.js';
 
+var gameSpeed = 100;
+
 var playArea = new PlayArea(25,25);
 
 var snakeLength = 10;
-var snakePoint = [1,0];
-var snakeDirection = [1,0];
+var snakePointWord = ["Right"];
+var snakeDirectionWord = "Right";
+var snakeDirection = [0,1];
 
 var head = new SnakeHead(3,3);
 
@@ -48,22 +51,22 @@ window.addEventListener('keydown', (event) => {
     // Alert the key name and key code on keydown
     //alert(`Key pressed ${name} \r\n Key code value: ${eventCode}`);
 
-    if (eventCode === ("KeyW") && !(snakeDirection[0] === 0 && !(snakeDirection[0] === -1))){
-        snakePoint = [0,1];
+    if ((eventCode === ("KeyW")) || (eventCode === ("ArrowUp"))){
+        if(snakePointWord.length<2)snakePointWord.push("Up");
     }
-    else if (eventCode === ("KeyD") && !(snakeDirection[0] === -1 && !(snakeDirection[0] === 0))){
-        snakePoint = [1,0];
+    else if ((eventCode === ("KeyD")) || (eventCode === ("ArrowRight"))){
+        if(snakePointWord.length<2)snakePointWord.push("Right");
     }
-    else if (eventCode === ("KeyS") && !(snakeDirection[0] === 0 && !(snakeDirection[0] === 1))){
-        snakePoint = [0,-1];
+    else if ((eventCode === ("KeyS")) || (eventCode === ("ArrowDown"))){
+        if(snakePointWord.length<2)snakePointWord.push("Down");
     }
-    else if (eventCode === ("KeyA") && !(snakeDirection[0] === 1 && !(snakeDirection[0] === 0))){
-        snakePoint = [-1,0];
+    else if ((eventCode === ("KeyA")) || (eventCode === ("ArrowLeft"))){
+        if(snakePointWord.length<2)snakePointWord.push("Left");
     }
     
 }, false);
 
-var runGame = setInterval(gameTick, 100);
+var runGame = setInterval(gameTick, gameSpeed);
 
 function gameTick(){
 
@@ -77,8 +80,34 @@ function gameTick(){
         new SnakeBody(head.x, head.y, head.value+1)
     );
 
-    snakeDirection=snakePoint;
-    head.move(snakeDirection[0],snakeDirection[1])
+    //it stops moving because snakePointWOrd is not empty but it doesn't add a 
+    if(snakePointWord.length===0){
+        snakePointWord[0]=snakeDirectionWord;
+    }
+
+    console.log("trying to go "+snakePointWord[0]+" while it is going "+snakeDirectionWord)
+    if ((snakePointWord[0] === "Up") && !(snakeDirectionWord === "Down")){
+        snakeDirection = [0,1];
+        snakeDirectionWord = snakePointWord[0];
+        snakePointWord.shift();
+    }
+    else if ((snakePointWord[0] === "Right") && !(snakeDirectionWord === "Left")){
+        snakeDirection = [1,0];
+        snakeDirectionWord = snakePointWord[0];
+        snakePointWord.shift();
+    }
+    else if ((snakePointWord[0] === "Down") && !(snakeDirectionWord === "Up")){
+        snakeDirection = [0,-1];
+        snakeDirectionWord = snakePointWord[0];
+        snakePointWord.shift();
+    }
+    else if ((snakePointWord[0] === "Left") && !(snakeDirectionWord === "Right")){
+        snakeDirection = [-1,0];
+        snakeDirectionWord = snakePointWord[0];
+        snakePointWord.shift();
+    }
+
+    head.move(snakeDirection[0],snakeDirection[1]);
 
     gameComponents.forEach(component => {
         if(component instanceof SnakeBody){
